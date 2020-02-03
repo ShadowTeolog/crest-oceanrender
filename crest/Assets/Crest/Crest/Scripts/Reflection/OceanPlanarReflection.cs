@@ -77,7 +77,7 @@ namespace Crest
         [SerializeField] bool _hdr = true;
         [SerializeField] bool _stencil = false;
         [SerializeField] bool _hideCameraGameobject = true;
-        [SerializeField] bool _allowMSAA = false;           //allow MSAA on reflection camera
+        [SerializeField] public bool _allowMSAA = false;           //allow MSAA on reflection camera
         [SerializeField] float _farClipPlane = 1000;             //far clip plane for reflection camera on all layers
         [SerializeField] bool _forceForwardRenderingPath = true;
         [SerializeField] CameraClearFlags _clearFlags = CameraClearFlags.Color;
@@ -85,12 +85,12 @@ namespace Crest
         /// <summary>
         /// Refresh reflection every x frames(1-every frame)
         /// </summary>
-        [SerializeField] int RefreshPerFrames = 1;
+        [SerializeField] public int RefreshPerFrames = 1;
 
         /// <summary>
         /// To relax OceanPlanarReflection refresh to different frames need to set different values for each script
         /// </summary>
-        [SerializeField] int _frameRefreshOffset = 0;
+        [SerializeField] public int _frameRefreshOffset = 0;
 
         RenderTexture _reflectionTexture;
 

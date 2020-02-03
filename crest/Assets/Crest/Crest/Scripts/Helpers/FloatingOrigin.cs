@@ -52,7 +52,7 @@ namespace Crest
         [Tooltip("Optionally provide a list of rigidbodies to avoid doing a FindObjectsOfType() call."), SerializeField]
         Rigidbody[] _overrideRigidbodyList = null;
         [Tooltip("Optionally provide a list of Gerstner components to avoid doing a FindObjectsOfType() call."), SerializeField]
-        ShapeGerstnerBatched[] _overrideGerstnerList = null;
+        public static ShapeGerstnerBatched[] _overrideGerstnerList = null;
 
         ParticleSystem.Particle[] _particleBuffer = null;
 
@@ -68,7 +68,7 @@ namespace Crest
             }
         }
 
-        void MoveOrigin(Vector3 newOrigin)
+        public void MoveOrigin(Vector3 newOrigin)
         {
             MoveOriginTransforms(newOrigin);
             MoveOriginParticles(newOrigin);
@@ -137,11 +137,12 @@ namespace Crest
         /// <summary>
         /// Notify ocean of origin shift
         /// </summary>
-        void MoveOriginOcean(Vector3 newOrigin)
+        public static void MoveOriginOcean(Vector3 newOrigin)
         {
-            if (OceanRenderer.Instance)
+            var instance = OceanRenderer.Instance;
+            if (instance!=null)
             {
-                var fos = OceanRenderer.Instance.GetComponentsInChildren<IFloatingOrigin>();
+                var fos = instance.GetComponentsInChildren<IFloatingOrigin>();
                 foreach (var fo in fos)
                 {
                     fo.SetOrigin(newOrigin);
@@ -149,10 +150,11 @@ namespace Crest
 
                 // Gerstner components
                 var gerstners = _overrideGerstnerList != null && _overrideGerstnerList.Length > 0 ? _overrideGerstnerList : FindObjectsOfType<ShapeGerstnerBatched>();
-                foreach (var gerstner in _overrideGerstnerList)
-                {
-                    gerstner.SetOrigin(newOrigin);
-                }
+                if(gerstners!=null)
+                    foreach (var gerstner in gerstners)
+                    {
+                        gerstner.SetOrigin(newOrigin);
+                    }
             }
         }
 

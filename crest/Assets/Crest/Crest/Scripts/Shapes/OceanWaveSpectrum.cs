@@ -4,6 +4,7 @@
 
 using UnityEditor;
 using UnityEngine;
+using WaveShapeCalculator.Random;
 
 namespace Crest
 {
@@ -59,10 +60,10 @@ namespace Crest
 
         public static float SmallWavelength(float octaveIndex) { return Mathf.Pow(2f, SMALLEST_WL_POW_2 + octaveIndex); }
 
-        public float GetAmplitude(float wavelength, float componentsPerOctave)
+        public float GetAmplitude(float wavelength, float componentsPerOctave, MersenneTwister randomGenerator)
         {
             // Always take random value so that sequence remains deterministic even if this function early outs
-            var rand0 = Random.value;
+            var rand0 = (float)randomGenerator.NextDouble();
 
             Debug.Assert(wavelength > 0f, "OceanWaveSpectrum: Wavelength must be >= 0f", this);
 
@@ -132,7 +133,7 @@ namespace Crest
         /// <summary>
         /// Samples spectrum to generate wave data. Wavelengths will be in ascending order.
         /// </summary>
-        public void GenerateWaveData(int componentsPerOctave, ref float[] wavelengths, ref float[] anglesDeg)
+        public void GenerateWaveData(System.Random randomStateBkp,int componentsPerOctave, ref float[] wavelengths, ref float[] anglesDeg)
         {
             var totalComponents = NUM_OCTAVES * componentsPerOctave;
 
@@ -152,9 +153,9 @@ namespace Crest
                     // wavelengths in sorted order!
                     var minWavelengthi = minWavelength + invComponentsPerOctave * minWavelength * i;
                     var maxWavelengthi = Mathf.Min(minWavelengthi + invComponentsPerOctave * minWavelength, 2f * minWavelength);
-                    wavelengths[index] = Mathf.Lerp(minWavelengthi, maxWavelengthi, Random.value);
+                    wavelengths[index] = Mathf.Lerp(minWavelengthi, maxWavelengthi, (float)randomStateBkp.NextDouble());
 
-                    var rnd = (i + Random.value) * invComponentsPerOctave;
+                    var rnd = (i + (float)randomStateBkp.NextDouble()) * invComponentsPerOctave;
                     anglesDeg[index] = (2f * rnd - 1f) * _waveDirectionVariance;
                 }
 

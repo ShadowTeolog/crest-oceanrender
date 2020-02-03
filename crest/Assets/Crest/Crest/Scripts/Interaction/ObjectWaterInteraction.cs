@@ -30,7 +30,7 @@ namespace Crest
         [SerializeField]
         bool _warnOnTeleport = false;
         [Tooltip("Maximum speed clamp (km/h), useful for controlling/limiting wake."), SerializeField]
-        float _maxSpeed = 100f;
+        public float _maxSpeed = 100f;
         [SerializeField]
         bool _warnOnSpeedClamp = false;
 

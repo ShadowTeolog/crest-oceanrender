@@ -89,7 +89,11 @@ namespace Crest
 
         [Tooltip("Shadow information used for lighting water."), SerializeField]
         bool _createShadowData = false;
-        public bool CreateShadowData { get { return _createShadowData; } }
+        public bool CreateShadowData
+        {
+            get { return _createShadowData; }
+            set { _createShadowData = value; }
+        }
         [Tooltip("The primary directional light. Required if shadowing is enabled.")]
         public Light _primaryLight;
         public SimSettingsShadow _simSettingsShadow;
@@ -125,7 +129,15 @@ namespace Crest
         /// <summary>
         /// Sea level is given by y coordinate of GameObject with OceanRenderer script.
         /// </summary>
-        public float SeaLevel { get { return transform.position.y; } }
+		 public float SeaLevel {
+			get { return transform.position.y;}
+            set
+            {
+                var postition = transform.position;
+                postition.y = value;
+                transform.position = postition;
+            }
+        }
 
         [HideInInspector] public LodTransform _lodTransform;
         [HideInInspector] public LodDataMgrAnimWaves _lodDataAnimWaves;
@@ -173,7 +185,7 @@ namespace Crest
             }
 
             InitViewpoint();
-            InitTimeProvider();
+            InitTimeProvider(null);
 
             if(_attachDebugGUI && GetComponent<OceanDebugGUI>() == null)
             {
@@ -218,8 +230,9 @@ namespace Crest
             }
         }
 
-        void InitTimeProvider()
+        public void InitTimeProvider(TimeProviderBase timeprovider)
         {
+			_timeProvider = timeprovider;
             // Used assigned time provider, or use one attached to this game object
             if (_timeProvider == null && (_timeProvider = GetComponent<TimeProviderBase>()) == null)
             {

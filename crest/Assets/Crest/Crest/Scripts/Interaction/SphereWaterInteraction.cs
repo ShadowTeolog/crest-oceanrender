@@ -101,7 +101,8 @@ namespace Crest
 
             // Which lod is this object in (roughly)?
             int simsActive;
-            if (!LateUpdateCountOverlappingSims(out simsActive, out int simsPresent))
+            int simsPresent;
+            if (!LateUpdateCountOverlappingSims(out simsActive, out simsPresent))
             {
                 if (simsPresent == 0)
                 {
